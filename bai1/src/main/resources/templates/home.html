@@ -15,12 +15,18 @@
 
 <div class="container mt-5">
 
+    <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="font-weight-bold text-primary">Danh sách công việc</h2>
 
         <a th:href="@{/add}" class="btn btn-success">
-             Thêm mới
+            Thêm mới
         </a>
+    </div>
+
+    <div th:if="${message}" class="alert alert-success alert-dismissible fade show">
+        <span th:text="${message}"></span>
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
     </div>
 
     <div class="card shadow-sm">
@@ -34,6 +40,7 @@
                     <th>Ngày</th>
                     <th>Status</th>
                     <th>Priority</th>
+                    <th>Hành động</th>
                 </tr>
                 </thead>
 
@@ -42,12 +49,13 @@
                     <td th:text="${t.id}"></td>
                     <td th:text="${t.content}"></td>
 
-                    <!-- format date -->
                     <td th:text="${#temporals.format(t.dueDate, 'dd/MM/yyyy')}"></td>
 
                     <td>
-                        <span class="badge badge-info"
-                              th:text="${t.status}"></span>
+                        <span class="badge"
+                              th:classappend="${t.status == 'DONE'} ? 'badge-success' : 'badge-info'"
+                              th:text="${t.status}">
+                        </span>
                     </td>
 
                     <td>
@@ -58,21 +66,39 @@
                               th:text="${t.priority}">
                         </span>
                     </td>
+
+                    <td>
+                        <a th:href="@{/edit/{id}(id=${t.id})}"
+                           class="btn btn-sm btn-warning">
+                            ✏Sửa
+                        </a>
+
+                        <a th:href="@{/delete/{id}(id=${t.id})}"
+                           class="btn btn-sm btn-danger"
+                           onclick="return confirm('Bạn có chắc muốn xóa không')">
+                            Xóa
+                        </a>
+                    </td>
                 </tr>
 
+                <!-- Empty state -->
                 <tr th:if="${#lists.isEmpty(todos)}">
-                    <td colspan="5" class="text-center text-muted py-4">
+                    <td colspan="6" class="text-center text-muted py-4">
                         Chưa có công việc nào
                     </td>
                 </tr>
-                </tbody>
 
+                </tbody>
             </table>
 
         </div>
     </div>
 
 </div>
+
+<!-- JS cho alert đóng -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 </body>
 </html>

@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Thêm công việc</title>
+    <title>Todo Form</title>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,37 +18,45 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
 
-            <!-- Card -->
             <div class="card shadow-sm">
                 <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">Thêm công việc</h4>
+                    <h4 class="mb-0"
+                        th:text="${todo.id != null} ? 'Cập nhật công việc' : 'Thêm công việc'">
+                    </h4>
                 </div>
 
                 <div class="card-body">
 
                     <form th:action="@{/add}" th:object="${todo}" method="post">
 
+                        <input type="hidden" th:field="*{id}">
+
                         <div class="form-group">
                             <label>Nội dung</label>
                             <input type="text"
-                                   class="form-control"
                                    th:field="*{content}"
-                                   placeholder="Nhập nội dung công việc">
+                                   class="form-control"
+                                   placeholder="Nhập nội dung công việc"
+                                   required
+                                   th:classappend="${#fields.hasErrors('content')} ? 'is-invalid' : ''">
 
-                            <small class="text-danger"
-                                   th:if="${#fields.hasErrors('content')}"
-                                   th:errors="*{content}"></small>
+                            <div class="invalid-feedback"
+                                 th:if="${#fields.hasErrors('content')}"
+                                 th:errors="*{content}">
+                            </div>
                         </div>
 
                         <div class="form-group">
                             <label>Ngày hết hạn</label>
                             <input type="date"
+                                   th:field="*{dueDate}"
                                    class="form-control"
-                                   th:field="*{dueDate}">
+                                   th:classappend="${#fields.hasErrors('dueDate')} ? 'is-invalid' : ''">
 
-                            <small class="text-danger"
-                                   th:if="${#fields.hasErrors('dueDate')}"
-                                   th:errors="*{dueDate}"></small>
+                            <div class="invalid-feedback"
+                                 th:if="${#fields.hasErrors('dueDate')}"
+                                 th:errors="*{dueDate}">
+                            </div>
                         </div>
 
                         <div class="form-group">
@@ -70,9 +78,8 @@
                             </select>
                         </div>
 
-                        <div class="d-flex justify-content-between">
-                            <a th:href="@{/}" class="btn btn-secondary">
-                                Quay lại
+                        <div class="d-flex justify-content-between mt-4">
+                            <a th:href="@{/}" class="btn btn-secondary">Quay lại
                             </a>
 
                             <button type="submit" class="btn btn-success">
